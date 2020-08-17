@@ -1,10 +1,12 @@
 {
-  "name": "fake-simple-json-datasource",
+  "name": "custom-simple-json-datasource",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+   
   },
   "author": "",
   "license": "ISC",
