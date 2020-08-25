@@ -1,17 +1,17 @@
-const Log = require('lil-logger').getLogger(__filename);
-const elasticsearch = require('elasticsearch');
-const pluralise = require('pluralise');
+//const Log = require('lil-logger').getLogger(__filename);
+//const elasticsearch = require('elasticsearch');
+//const pluralise = require('pluralise');
 const memoize = require('memoizee');
 const uid = require('uid-promise');
 const Bluebird = require('bluebird');
-
+const { Client } = require('@elastic/elasticsearch');
 const {
   ES_URL,
   ES_LOG_LEVEL
 } = process.env;
 
-const client = new elasticsearch.Client({
-  hosts: ES_URL.split(',') || ['http://elasticsearch:9200/'],
+const client = new Client({
+  node: ES_URL.split(',') || ['http://elasticsearch:9200/'],
   log: ES_LOG_LEVEL || 'info',
   defer: function () {
     return Bluebird.defer();
@@ -27,11 +27,11 @@ exports.indexDoc = async function indexDoc(index, type, id, body) {
 exports.createIndex = async function createIndex(index, type, id, body) {
   !type && (type = index);
   if (!id) {
-    Log.debug({ msg: 'create index: id not found', arg1: index, arg2: type });
+    //Log.debug({ msg: 'create index: id not found', arg1: index, arg2: type });
     id = await uid(20);
   }
 
-  Log.debug({ msg: 'id: ', arg1: id, arg2: type });
+  //Log.debug({ msg: 'id: ', arg1: id, arg2: type });
   return await client.create({
     index,
     type,
@@ -75,14 +75,14 @@ exports.getClient = function () {
   return client;
 };
 
-exports.getIndexType = memoize(function (collectionName) {
+/*exports.getIndexType = memoize(function (collectionName) {
   const index = collectionName.toLowerCase();
   return {
     index,
     type: pluralise(0, index)
   };
 });
-
+*/
 exports.hashCode = function (s) {
   let ret;
   for (let ret = 0, i = 0, len = s.length; i < len; i++) {

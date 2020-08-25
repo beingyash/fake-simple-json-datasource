@@ -1,0 +1,10 @@
+version: "3"
+services:
+  sjds:
+    image: beingyash/grafana-simple-json-ds:0.0.2
+    restart: always
+    environment:
+      - PORT=80
+      - ES_URL=http://advance:7800
+    ports:
+      - 3333:80
