@@ -146,7 +146,8 @@ async function logsValue(start_Time,end_Time,sizeReq) {
 }
 
 app.post("/search", function(req, res) {
-  res.send("LIL_CRON");
+  searchRes = ["lil-cron"]
+  res.send(searchRes);
   res.end();
 });
 
