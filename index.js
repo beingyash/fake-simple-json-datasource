@@ -131,7 +131,7 @@ async function logsValue(start_Time,end_Time,sizeReq) {
       }
     
   });
-  var log_parse=[];
+  var log_arg=[];
   let log =[];
   result.body.hits.hits.forEach(hit => {
     //log_parse.push((hit._source.log));
@@ -163,36 +163,90 @@ app.post("/query", async function(req, res) {
   const start_Time = new Date(req.body.range.from);
   const end_Time = new Date(req.body.range.to);
   //console.log("test", start_Time);
-  let sizeReq = 500;
-  if(req.body.data){
+  let sizeReq = 50;
+ /* if(req.body.data){
     sizeReq = req.body.data.size || 500;
-  }
+  }*/
   const req_log_value = await logsValue(start_Time,end_Time,sizeReq);
+  //console.log('0-0-0-0-0-0-0-0-0',req_log_value);
+  const rowsValue = req_log_value.map(val=>{
+    return {
+      level: val.level , 
+      pid: val.pid,
+      hostname:val.hostname,
+      arg1name:val.arg1 && val.arg1.name || undefined ,
+      arg1cron:val.arg1 && val.arg1.cron ,
+      arg1startTime: val.arg1 && val.arg1.startTime ,
+    }
+  });
+  const finalRowVAlue= rowsValue.map(obj=>{
+     return (Object.values(obj));
+   })
+  //console.log('final bao------------------', finalRowVAlue);
+  const argObject = await getKeys(req_log_value);
+  //console.log('TYPE OF -=-=-=-=-=',  argObject);
+  var arr = [];
+  Array.prototype.contains = function(v) {
+    for (var i = 0; i < this.length; i++) {
+      if (this[i] === v) return true;
+    }
+    return false;
+  };
+  Array.prototype.unique = function() {
+    
+    for (var i = 0; i < argObject.length; i++) {
+      if (!arr.contains(argObject[i])) {
+        arr.push(argObject[i]);
+      }
+    }
+    return arr;
+  }
+
+  var uniques = argObject.unique();
+
   
+//console.log('distince-----------',uniques);
   let keys =[];
   let rows=[];
-  for(let i=0 ; i<8 ; i++){
+  let argsValue = [];
+  /*for(let i=0 ; i<8 ; i++){
   keys=Object.keys(req_log_value[i]);
-  }
+  }*/
+
+function getKeys(obj) {
+  return Object.keys(obj).reduce((r, k) => {
+    r.push(k);
+
+    if(Object(obj[k]) === obj[k])
+      r.push(...getKeys(obj[k]));
+
+    return r;
+  }, [])
+}
+   
 let columns = [];
-var strType = ['number','number','string','string','string','string','string','string'];
+var strType = ['string'];
 
-  for (var i = 0; i < 8; i++) {
+for (var i = 0; i < uniques.length; i++) {
+  try{
+    if(isNaN(uniques[i]))
     columns.push({
-          text: keys[i],  
-          type: strType[i]
-          });
-  }
-for(let i=0 ; i<req_log_value.length ; i++){
+     text: uniques[i],  
+     type: strType
+     });
+     }catch(err){
+    }
+}
+//  console.log('arg value****************', columns);
+/*for(let i=0 ; i<req_log_value.length ; i++){
   rows.push(Object.values(req_log_value[i]));
-  }
-
+  }*/
   let test_array = [];
-   test_array.push({columns,rows,"type":"table"});
-   console.log('gyufhjhg', JSON.stringify(test_array));
+   test_array.push({columns,finalRowVAlue,"type":"table"});
+   //console.log('gyufhjhg', JSON.stringify(test_array));
    res.status(200).send(test_array)
-
 });
+
 app.all("/tag[-]keys", function(req, res) {
   setCORSHeaders(res);
   console.log(req.url);
