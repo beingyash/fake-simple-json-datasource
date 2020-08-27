@@ -179,7 +179,7 @@ app.post("/query", async function(req, res) {
       arg1startTime: val.arg1 && val.arg1.startTime ,
     }
   });
-  const rows= rowsValue.map(obj=>{
+  const value= rowsValue.map(obj=>{
      return (Object.values(obj));
    })
   //console.log('final bao------------------', finalRowVAlue);
