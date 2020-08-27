@@ -179,7 +179,7 @@ app.post("/query", async function(req, res) {
       arg1startTime: val.arg1 && val.arg1.startTime ,
     }
   });
-  const value= rowsValue.map(obj=>{
+  let rows = rowsValue.map(obj=>{
      return (Object.values(obj));
    })
   //console.log('final bao------------------', finalRowVAlue);
@@ -207,7 +207,7 @@ app.post("/query", async function(req, res) {
   
 //console.log('distince-----------',uniques);
   let keys =[];
-  let rows=[];
+  //let rows=[];
   let argsValue = [];
   /*for(let i=0 ; i<8 ; i++){
   keys=Object.keys(req_log_value[i]);
