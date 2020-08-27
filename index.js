@@ -179,7 +179,7 @@ app.post("/query", async function(req, res) {
       arg1startTime: val.arg1 && val.arg1.startTime ,
     }
   });
-  const finalRowVAlue= rowsValue.map(obj=>{
+  const rows= rowsValue.map(obj=>{
      return (Object.values(obj));
    })
   //console.log('final bao------------------', finalRowVAlue);
@@ -242,7 +242,7 @@ for (var i = 0; i < uniques.length; i++) {
   rows.push(Object.values(req_log_value[i]));
   }*/
   let test_array = [];
-   test_array.push({columns,finalRowVAlue,"type":"table"});
+   test_array.push({columns,rows,"type":"table"});
    //console.log('gyufhjhg', JSON.stringify(test_array));
    res.status(200).send(test_array)
 });
