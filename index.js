@@ -169,14 +169,16 @@ app.post("/query", async function(req, res) {
   }*/
   const req_log_value = await logsValue(start_Time,end_Time,sizeReq);
   //console.log('0-0-0-0-0-0-0-0-0',req_log_value);
+  console.log('final value', req_log_value);
   const rowsValue = req_log_value.map(val=>{
     return {
-      level: val.level , 
+      level: val.level, 
       pid: val.pid,
       hostname:val.hostname,
-      arg1name:val.arg1 && val.arg1.name || undefined ,
-      arg1cron:val.arg1 && val.arg1.cron ,
-      arg1startTime: val.arg1 && val.arg1.startTime ,
+      arg1name:val.arg1 && val.arg1.name || '',
+      arg1cron:val.arg1 && val.arg1.cron || '',
+      arg1startTime: val.arg1 && val.arg1.startTime || '',
+      arg2: val.arg2 || ''
     }
   });
   let rows = rowsValue.map(obj=>{
